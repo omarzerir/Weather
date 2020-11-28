@@ -13,7 +13,7 @@ data class Weather(
 ) : Serializable {
 
     fun customString(): String {
-        return "${request?.query}\nTemp:${current?.temperature}, Hum:${current?.humidity}, ${current?.desc()}"
+        return "${location?.region}, ${location?.country}\nTemp:${current?.temperature}, Hum:${current?.humidity}, ${current?.desc()}"
     }
 
 }

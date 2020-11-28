@@ -2,7 +2,6 @@ package com.zerir.weather.modules.addPhoto
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -32,6 +31,8 @@ class AddWeatherPhotoFragment : Fragment() {
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var errorDialog: ErrorDialog
 
+    private var latLon: String = ""
+
     private var photoBitmap: Bitmap? = null
 
     override fun onCreateView(
@@ -52,7 +53,12 @@ class AddWeatherPhotoFragment : Fragment() {
             }
         })
 
-        if (checkStoragePermission(this)) openCamera(this)
+        arguments?.let {
+            val args = AddWeatherPhotoFragmentArgs.fromBundle(it)
+            latLon = args.latLon
+        }
+
+        openCamera(this)
 
         return binding.root
     }
@@ -104,31 +110,13 @@ class AddWeatherPhotoFragment : Fragment() {
                         CoroutineScope(Dispatchers.Main).launch {
                             photoBitmap = data.extras!!["data"] as Bitmap?
                             binding.weatherPhotoIv.setImageBitmap(photoBitmap)
-                            viewModel.getWeatherData("Istanbul")
+                            viewModel.getWeatherData(latLon)
                         }
                     }
                 }
             }
         } else {
             requireActivity().onBackPressed()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode != Activity.RESULT_CANCELED) {
-            when (requestCode) {
-                STORAGE_PERMISSION_TAG -> {
-                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        openCamera(this)
-                    } else {
-                        requireActivity().onBackPressed()
-                    }
-                }
-            }
         }
     }
 

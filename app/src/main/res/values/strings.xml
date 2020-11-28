@@ -4,4 +4,8 @@
     <string name="error_message">Error Message</string>
     <string name="something_went_wrong">Something Went Wrong</string>
     <string name="there_is_no_photos">There is no Photos, You Can Add more from adding button</string>
+    <string name="gps_is_disable">GPS is Disable</string>
+    <string name="please_enable_gps_and_try_again">Please enable GPS and try again</string>
+    <string name="cancel">Cancel</string>
+    <string name="enable_gps">Enable GPS</string>
 </resources>

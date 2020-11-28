@@ -5,6 +5,6 @@ import com.zerir.weather.repository.remote.retrofit.ApiResult
 
 interface RemoteReference {
 
-    suspend fun getWeatherData(city: String): ApiResult<Weather?>
+    suspend fun getWeatherData(latLon: String): ApiResult<Weather?>
 
 }

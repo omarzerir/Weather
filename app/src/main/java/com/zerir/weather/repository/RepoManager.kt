@@ -25,8 +25,8 @@ class RepoManager(context: Context) : RepoReference {
         }
     }
 
-    override suspend fun getWeatherData(city: String): ApiResult<Weather?> {
-        return remoteRepo.getWeatherData(city)
+    override suspend fun getWeatherData(latLon: String): ApiResult<Weather?> {
+        return remoteRepo.getWeatherData(latLon)
     }
 
     override suspend fun addWeatherPhoto(path: String?) {

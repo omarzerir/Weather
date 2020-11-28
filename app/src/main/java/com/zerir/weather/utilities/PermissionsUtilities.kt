@@ -5,16 +5,30 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 
-const val STORAGE_PERMISSION_TAG = 202
+const val ALL_PERMISSIONS_TAG = 202
 
-fun checkStoragePermission(context: Fragment): Boolean {
-    val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    val result = ActivityCompat.checkSelfPermission(
-        context.requireContext(),
+fun checkAllPermission(context: Fragment): Boolean {
+    return ActivityCompat.checkSelfPermission(
+        context.requireActivity(),
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                context.requireActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                context.requireActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+}
+
+fun requestAllPermissions(context: Fragment){
+    val permissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
-    ) != PackageManager.PERMISSION_GRANTED
-    return if (result) {
-        context.requestPermissions(permissions, STORAGE_PERMISSION_TAG)
-        false
-    } else true
+    )
+    context.requestPermissions(
+        permissions, ALL_PERMISSIONS_TAG
+    )
 }

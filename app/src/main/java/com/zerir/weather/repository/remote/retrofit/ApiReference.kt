@@ -11,7 +11,7 @@ interface ApiReference {
     @GET("current")
     suspend fun getWeatherData(
         @Query("access_key") apiId: String,
-        @Query("query") city: String
+        @Query("query") latLon: String
     ): Response<DefaultResponse<Weather>>
 
 }

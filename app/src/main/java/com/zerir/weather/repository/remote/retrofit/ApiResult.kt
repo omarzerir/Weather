@@ -23,16 +23,16 @@ class ApiResult<out T> private constructor(
         }
 
         fun <T> result(response: Response<DefaultResponse<T>>?): ApiResult<T?> {
-            return if (response == null) failure("Something Went Wrong")
+            return if (response == null) failure("Something Went Wrong\nPlease Check your internet or try again later")
             else {
                 return if (response.isSuccessful) {
                     val data = response.body()
-                    return if(data == null) failure("Something Went Wrong")
-                    else if(data.error == null && data.successBody == null) failure("Something Went Wrong")
-                    else if(data.error != null) {
+                    return if (data == null) failure("Something Went Wrong")
+                    else if (data.error == null && data.successBody == null) failure("Something Went Wrong")
+                    else if (data.error != null) {
                         val message = data.error.info
                         failure(message)
-                    }else {
+                    } else {
                         success(data.successBody)
                     }
                 } else {
@@ -40,6 +40,7 @@ class ApiResult<out T> private constructor(
                 }
             }
         }
+
     }
 
 }

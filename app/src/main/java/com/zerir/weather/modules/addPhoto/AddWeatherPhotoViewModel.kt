@@ -23,10 +23,10 @@ class AddWeatherPhotoViewModel(private val app: Application) : AndroidViewModel(
     private val mFinalPhoto = MutableLiveData<String>()
     val finalPhoto: LiveData<String> get() = mFinalPhoto
 
-    fun getWeatherData(city: String){
+    fun getWeatherData(latLon: String){
         scoop.launch {
             mWeatherStatus.postValue(ApiStatusType.LOADING)
-            val status = repoManager.getWeatherData(city).apiStatusType
+            val status = repoManager.getWeatherData(latLon).apiStatusType
             mWeatherStatus.postValue(status)
         }
     }

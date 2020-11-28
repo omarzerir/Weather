@@ -10,9 +10,9 @@ class RemoteRepo : RemoteReference {
     private val clientApis = ApiClient().clientApis()
     private val apiId get() = ApiClient.apiId
 
-    override suspend fun getWeatherData(city: String): ApiResult<Weather?> {
+    override suspend fun getWeatherData(latLon: String): ApiResult<Weather?> {
         return try {
-            val response = clientApis.getWeatherData(apiId = apiId, city = city)
+            val response = clientApis.getWeatherData(apiId = apiId, latLon = latLon)
             ApiResult.result(response)
         } catch (e: Throwable) {
             Log.e("weather ex", "${e.message}")
