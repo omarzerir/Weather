@@ -7,6 +7,8 @@ Weather application lets users take a photo, add current weather informationas a
 
 This app using the following views and techniques:
 
+* [Weather](https://weatherstack.com/) to get weather data
+
 * MVVM as Architecture for the project
 * [Retrofit](https://square.github.io/retrofit/) to make api calls to an HTTP web service
 * [GSON](https://github.com/google/gson) which handles the deserialization of the returned JSON to Kotlin data objects
