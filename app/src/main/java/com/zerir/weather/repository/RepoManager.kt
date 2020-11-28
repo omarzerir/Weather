@@ -1,6 +1,7 @@
 package com.zerir.weather.repository
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.zerir.weather.repository.data.weather.Weather
 import com.zerir.weather.repository.local.LocalRepo
 import com.zerir.weather.repository.remote.RemoteRepo
@@ -28,4 +29,11 @@ class RepoManager(context: Context) : RepoReference {
         return remoteRepo.getWeatherData(city)
     }
 
+    override suspend fun addWeatherPhoto(path: String?) {
+        localRepo.addWeatherPhoto(path)
+    }
+
+    override fun getAllWeatherPhotos(): LiveData<ArrayList<String>> {
+        return localRepo.getAllWeatherPhotos()
+    }
 }

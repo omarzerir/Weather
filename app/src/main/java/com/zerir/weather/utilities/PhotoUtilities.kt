@@ -44,7 +44,7 @@ fun drawMultilineTextToBitmap(
     val canvas = Canvas(bitmap)
     val paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
     paint.color = Color.WHITE
-    paint.textSize = 12f
+    paint.textSize = 10f
     paint.setShadowLayer(1f, 0f, 1f, Color.BLACK)
     val textWidth = canvas.width - (16).toInt()
     val textLayout =

@@ -13,6 +13,13 @@
         <action
             android:id="@+id/action_weatherPhotosFragment_to_addWeatherPhotoFragment"
             app:destination="@id/addWeatherPhotoFragment" />
+        <action
+            android:id="@+id/action_weatherPhotosFragment_to_displayPhotoFragment"
+            app:destination="@id/displayPhotoFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_back"
+            app:popExitAnim="@anim/fade_out_back" />
     </fragment>
 
     <fragment
@@ -20,4 +27,14 @@
         android:name="com.zerir.weather.modules.addPhoto.AddWeatherPhotoFragment"
         android:label="AddWeatherPhotoFragment"
         tools:layout="@layout/fragment_add_weather_photo" />
+
+    <fragment
+        android:id="@+id/displayPhotoFragment"
+        android:name="com.zerir.weather.modules.displayPhoto.DisplayPhotoFragment"
+        android:label="DisplayPhotoFragment"
+        tools:layout="@layout/fragment_display_photo">
+        <argument
+            android:name="path"
+            app:argType="string" />
+    </fragment>
 </navigation>

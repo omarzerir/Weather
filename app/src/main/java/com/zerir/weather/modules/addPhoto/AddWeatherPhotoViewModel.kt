@@ -44,6 +44,7 @@ class AddWeatherPhotoViewModel(private val app: Application) : AndroidViewModel(
                 text
             )
             mFinalPhoto.postValue(photoPath)
+            repoManager.addWeatherPhoto(photoPath)
         }
     }
 
