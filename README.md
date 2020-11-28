@@ -1,6 +1,7 @@
 # Weather
 
 Weather application lets users take a photo, add current weather informationas and share it.
+* for cheking the project please checkout develop Branch
 
 ## Application
 
