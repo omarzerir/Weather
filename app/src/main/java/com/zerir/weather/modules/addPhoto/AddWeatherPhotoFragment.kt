@@ -15,7 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.zerir.weather.R
 import com.zerir.weather.databinding.FragmentAddWeatherPhotoBinding
+import com.zerir.weather.repository.data.weather.Weather
+import com.zerir.weather.repository.remote.retrofit.ApiStatusType
 import com.zerir.weather.utilities.*
+import com.zerir.weather.utilities.dialogs.ErrorDialog
+import com.zerir.weather.utilities.dialogs.LoadingDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +29,10 @@ class AddWeatherPhotoFragment : Fragment() {
     private lateinit var binding: FragmentAddWeatherPhotoBinding
     private lateinit var viewModel: AddWeatherPhotoViewModel
 
-    private var photoPath: String? = null
+    private lateinit var loadingDialog: LoadingDialog
+    private lateinit var errorDialog: ErrorDialog
+
+    private var photoBitmap: Bitmap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,11 +45,14 @@ class AddWeatherPhotoFragment : Fragment() {
             false
         )
 
-        if (checkStoragePermission(this)) openCamera(this)
+        loadingDialog = LoadingDialog(requireActivity())
+        errorDialog = ErrorDialog(requireActivity(), object: ErrorDialog.OnErrorDialogDone {
+            override fun onErrorDone() {
+                requireActivity().onBackPressed()
+            }
+        })
 
-        binding.shareTv.setOnClickListener {
-            shareImage(this, photoPath)
-        }
+        if (checkStoragePermission(this)) openCamera(this)
 
         return binding.root
     }
@@ -51,6 +61,39 @@ class AddWeatherPhotoFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(AddWeatherPhotoViewModel::class.java)
+
+        viewModel.weatherStatus.observe(viewLifecycleOwner, { status ->
+            status?.let {
+                when(status){
+                    ApiStatusType.LOADING -> {
+                        loadingDialog.show()
+                    }
+                    ApiStatusType.SUCCESS -> {
+                        loadingDialog.dismiss()
+                        val weather = it.data as Weather
+                        viewModel.onWeatherDataGot(photoBitmap!!, weather)
+                    }
+                    ApiStatusType.FAILURE -> {
+                        loadingDialog.dismiss()
+                        val message = it.data as String
+                        errorDialog.show(message)
+                    }
+                }
+                viewModel.clearWeatherStatus()
+            }
+        })
+
+        viewModel.finalPhoto.observe(viewLifecycleOwner, {
+            it?.let { path ->
+                val uri = Uri.parse(path)
+                binding.weatherPhotoIv.setImageURI(uri)
+
+                binding.shareTv.visibility = VISIBLE
+                binding.shareTv.setOnClickListener {
+                    shareImage(this, path)
+                }
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -59,15 +102,9 @@ class AddWeatherPhotoFragment : Fragment() {
                 TAKE_PHOTO_TAG -> {
                     if (resultCode == Activity.RESULT_OK && data != null) {
                         CoroutineScope(Dispatchers.Main).launch {
-                            val selectedImage = data.extras!!["data"] as Bitmap?
-                            photoPath = drawMultilineTextToBitmap(
-                                this@AddWeatherPhotoFragment,
-                                selectedImage,
-                                "Weather Desc: 8, Istanbul, hum. 25% Weather Desc: 8, Istanbul, hum. 25% Weather Desc: 8, Istanbul, hum. 25%"
-                            )
-                            val uri = Uri.parse(photoPath)
-                            binding.weatherPhotoIv.setImageURI(uri)
-                            binding.shareTv.visibility = VISIBLE
+                            photoBitmap = data.extras!!["data"] as Bitmap?
+                            binding.weatherPhotoIv.setImageBitmap(photoBitmap)
+                            viewModel.getWeatherData("Istanbul")
                         }
                     }
                 }

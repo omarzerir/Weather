@@ -2,6 +2,7 @@ package com.zerir.weather.utilities
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.net.Uri
@@ -29,7 +30,7 @@ fun openCamera(context: Fragment) {
 }
 
 fun drawMultilineTextToBitmap(
-    context: Fragment,
+    context: Context,
     src: Bitmap?,
     text: String
 ): String? {
@@ -70,7 +71,7 @@ fun drawMultilineTextToBitmap(
     return savePhoto(context, bitmap)
 }
 
-private fun savePhoto(context: Fragment, photo: Bitmap?): String? {
+private fun savePhoto(context: Context, photo: Bitmap?): String? {
     if (photo == null) return null
     return try {
         val file = createImageFile(context)
@@ -108,10 +109,10 @@ fun shareImage(context: Fragment, path: String?) {
 }
 
 @SuppressLint("SimpleDateFormat")
-private fun createImageFile(context: Fragment): File {
+private fun createImageFile(context: Context): File {
     val timeStamp: String = SimpleDateFormat(PHOTO_DATE_FORMAT).format(Date())
     val storageDir: File? =
-        context.requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     return File.createTempFile(
         "JPEG_${timeStamp}_",
         ".jpg",
